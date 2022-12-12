@@ -78,3 +78,22 @@ class RequestPasswordResetForm(forms.Form):
         if not user:
             raise ValidationError(f"'{email}' unknown or unconfirmed")
         return email
+
+
+class ResetPasswordForm(forms.Form):
+    password = forms.CharField(
+        max_length=64, widget=forms.PasswordInput,
+        validators=[MinLengthValidator(4), MaxLengthValidator(64)]
+    )
+    password2 = forms.CharField(
+        label="Confirm password",
+        max_length=64, widget=forms.PasswordInput,
+        validators=[MinLengthValidator(4), MaxLengthValidator(64)]
+    )
+
+    def clean_password2(self):
+        password = self.cleaned_data['password']
+        password2 = self.cleaned_data['password2']
+        if password != password2:
+            raise ValidationError("different than password")
+        return password2

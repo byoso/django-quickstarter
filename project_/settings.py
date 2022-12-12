@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+
+ENV = os.environ.get('ENV') or "dev"  # dev or prod
+HOST_NAME = os.environ.get('HOST_NAME') or 'http://localhost' # domain
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +30,7 @@ SECRET_KEY = 'django-insecure-ku=q1^ny6*w5gwc4!mkm^k6f7bkg2j$g@%zljztxyw-h*=#(to
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -132,3 +136,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login' # redirect if login_required is denied
 AUTH_USER_MODEL = 'users.User'
+
+# EMAIL
+if ENV == "prod":
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST') or "localhost"
+EMAIL_PORT = os.environ.get('EMAIL_PORT') or 25
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or "email@email.com"
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or "testpass"

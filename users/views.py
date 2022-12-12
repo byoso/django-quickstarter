@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,8 +8,9 @@ from .forms import (
     LoginForm,
     SignInForm,
     RequestPasswordResetForm,
+    ResetPasswordForm,
 )
-
+from .utils import send_password_reset_email
 
 def index(request):
     return render(request, "index.html")
@@ -72,8 +73,9 @@ def request_password_reset(request):
         form = RequestPasswordResetForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            ##### TODO : SEND EMAIL
+            user = User.objects.get(email=email)
 
+            send_password_reset_email(request, user)
 
             messages.add_message(
                 request, messages.INFO,
@@ -85,3 +87,29 @@ def request_password_reset(request):
 
     form = RequestPasswordResetForm()
     return render(request, "users/request_password_reset.html", {'form':form})
+
+
+def reset_password(request, token):
+    user = User.verify_token(token)
+    if user is None:
+        return HttpResponse("Token invalid or expired")
+
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            messages.add_message(
+                request, messages.SUCCESS,
+                message=f"Your password have been reset",
+                extra_tags="success"
+            )
+            return redirect('login')
+        else:
+            return render(request, "users/reset_password.html", {'form':form})
+    form = ResetPasswordForm()
+    context = {
+        'user': user,
+        'form': form,
+    }
+    return render(request, "users/reset_password.html", context)
