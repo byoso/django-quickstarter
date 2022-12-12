@@ -6,7 +6,7 @@ from django.template.loader import get_template
 
 
 def send_password_reset_email(request, user):
-    token = user.get_jwt_token(600)
+    token = user.get_jwt_token(expires_in=600)
     domain = request.build_absolute_uri('/')[:-1]
     link = domain + reverse('reset_password', args=[token])
     context = {
@@ -19,22 +19,25 @@ def send_password_reset_email(request, user):
         'Password reset request',
         msg_text.render(context),
         'from@example.com',
-        ['to@example.com'],
+        [user.email],
         fail_silently=False,
     )
 
 
-# def send_email_confirmation_email(user):
-#     token = user.get_reset_password_token()
-#     context = {
-#         'user': user,
-#         'token': token
-#     }
+def send_confirm_email(request, user):
+    token = user.get_jwt_token(expires_in=600)
+    domain = request.build_absolute_uri('/')[:-1]
+    link = domain + reverse('confirm_email', args=[token])
+    context = {
+        'user': user,
+        'link': link
+    }
 
-#     send_mail(
-#         'Email confirmation',
-#         sender=ConfigApp.ADMINS[0],
-#         recipients=[user.email],
-#         text_body=render_template("auth/email/email_confirmation_email.txt", **context),
-#         html_body=render_template("auth/email/email_confirmation_email.html", **context),
-#     )
+    msg_text = get_template("users/email/confirm_email.txt")
+    send_mail(
+        'Confirm your new email',
+        msg_text.render(context),
+        'from@example.com',
+        [user.unconfirmed_email],
+        fail_silently=False,
+    )

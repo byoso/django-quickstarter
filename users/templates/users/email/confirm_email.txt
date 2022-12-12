@@ -1,0 +1,6 @@
+Dear {{ user.username }},
+
+To confirm your email, click on the following link:
+{{ link }}
+
+If you have not reqested an email change, just ignore this message.

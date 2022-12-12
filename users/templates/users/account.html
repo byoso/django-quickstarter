@@ -9,13 +9,13 @@
     secret id: {{ user.id }}
     <hr>
 <p>
-   <a href="">Change my Username</a>
+   <a href="{% url 'change_username' %}">Change my Username</a>
 </p>
 <p>
-   <a href=""> Change my email </a>
+   <a href="{% url 'change_email' %}"> Change my email </a>
 </p>
 <p>
-   <a href="">Reset my password</a>
+   <a href="{% url 'request_password_reset' %}">Reset my password</a>
 </p>
 
 {% endblock content %}

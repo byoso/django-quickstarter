@@ -15,7 +15,6 @@ from pathlib import Path
 
 
 ENV = os.environ.get('ENV') or "dev"  # dev or prod
-HOST_NAME = os.environ.get('HOST_NAME') or 'http://localhost' # domain
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

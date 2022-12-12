@@ -9,8 +9,10 @@ from .forms import (
     SignInForm,
     RequestPasswordResetForm,
     ResetPasswordForm,
+    ChangeUsernameForm,
+    ChangeEmailForm,
 )
-from .utils import send_password_reset_email
+from .utils import send_password_reset_email, send_confirm_email
 
 def index(request):
     return render(request, "index.html")
@@ -57,9 +59,14 @@ def signin_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = User.objects.create_user(username, email, password)
+            user = User(username=username, email=email, is_active=False)
             user.save()
+            messages.add_message(
+                request, messages.INFO,
+                message=f"Please check your email '{email}' to confirm your account and set your password",
+                extra_tags="info"
+            )
+            send_password_reset_email(request, user)
             return redirect('login')
         else:
             return render(request, "users/signin.html", {'form':form})
@@ -84,8 +91,9 @@ def request_password_reset(request):
             )
         else:
             return render(request, "users/request_password_reset.html", {'form':form})
-
     form = RequestPasswordResetForm()
+    if request.user.is_authenticated:
+        form = RequestPasswordResetForm(initial={'email': request.user.email})
     return render(request, "users/request_password_reset.html", {'form':form})
 
 
@@ -98,13 +106,15 @@ def reset_password(request, token):
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
             user.set_password(form.cleaned_data['password'])
+            user.is_active = True
             user.save()
+            login(request, user)
             messages.add_message(
                 request, messages.SUCCESS,
                 message=f"Your password have been reset",
                 extra_tags="success"
             )
-            return redirect('login')
+            return redirect('account')
         else:
             return render(request, "users/reset_password.html", {'form':form})
     form = ResetPasswordForm()
@@ -113,3 +123,64 @@ def reset_password(request, token):
         'form': form,
     }
     return render(request, "users/reset_password.html", context)
+
+
+@login_required
+def change_username(request):
+    if request.method == 'POST':
+        form = ChangeUsernameForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            user = request.user
+            user.username = username
+            user.save()
+            messages.add_message(
+                request, messages.SUCCESS,
+                message=f"New username set: '{username}'",
+                extra_tags="success"
+            )
+            return redirect("account")
+        else:
+            return render(request, "users/change_username.html", {'form': form})
+
+    form = ChangeUsernameForm()
+    return render(request, "users/change_username.html", {'form': form})
+
+
+@login_required
+def change_email(request):
+    if request.method == 'POST':
+        form = ChangeEmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = request.user
+            user.unconfirmed_email = email
+            user.save()
+            send_confirm_email(request, user)
+
+            messages.add_message(
+                request, messages.INFO,
+                message=f"Please check your email to confirm your address '{email}'",
+                extra_tags="info"
+            )
+        else:
+            return render(request, "users/change_email.html", {'form':form})
+
+    form = ChangeEmailForm()
+    return render(request, "users/change_email.html", {'form':form})
+
+
+def confirm_email(request, token):
+    user = User.verify_token(token)
+    if user is not None:
+        user.email = user.unconfirmed_email
+        user.unconfirmed_email = None
+        user.save()
+        login(request, user)
+        messages.add_message(
+            request, messages.SUCCESS,
+            message=f"Your new email have been confirmed: '{user.email}'",
+            extra_tags="success"
+        )
+
+        return redirect("account")
