@@ -56,4 +56,25 @@ class SignInForm(forms.Form):
         username = self.cleaned_data['username']
         if "@" in username:
             raise ValidationError("'@' not allowed in a username")
+        else:
+            user = User.objects.filter(username=username)
+            if user:
+                raise ValidationError(f"'{username}' already used by someone")
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = User.objects.filter(email=email)
+        if user:
+            raise ValidationError(f"'{email}' already used.")
+
+
+class RequestPasswordResetForm(forms.Form):
+    email = forms.EmailField(validators=[EmailValidator()])
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = User.objects.filter(email=email)
+        if not user:
+            raise ValidationError(f"'{email}' unknown or unconfirmed")
+        return email

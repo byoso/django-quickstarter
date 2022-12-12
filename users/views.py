@@ -4,7 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .models import User
-from .forms import LoginForm, SignInForm
+from .forms import (
+    LoginForm,
+    SignInForm,
+    RequestPasswordResetForm,
+)
 
 
 def index(request):
@@ -61,3 +65,23 @@ def signin_view(request):
 
     form = SignInForm()
     return render(request, "users/signin.html", {'form':form})
+
+
+def request_password_reset(request):
+    if request.method == "POST":
+        form = RequestPasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            ##### TODO : SEND EMAIL
+
+
+            messages.add_message(
+                request, messages.INFO,
+                message=f"Please check your email '{email}' to reset your password",
+                extra_tags="info"
+            )
+        else:
+            return render(request, "users/request_password_reset.html", {'form':form})
+
+    form = RequestPasswordResetForm()
+    return render(request, "users/request_password_reset.html", {'form':form})
