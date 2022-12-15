@@ -14,6 +14,7 @@ from .forms import (
 )
 from .utils import send_password_reset_email, send_confirm_email
 
+
 def index(request):
     return render(request, "index.html")
 
@@ -26,21 +27,24 @@ def login_view(request):
             password = form.cleaned_data['password']
             if "@" in login_entry:
                 username = User.objects.get(email=login_entry).username
-                user = authenticate(request, username=username, password=password)
+                user = authenticate(
+                    request, username=username, password=password)
             else:
-                user = authenticate(request, username=login_entry, password=password)
+                user = authenticate(
+                    request, username=login_entry, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('index')
             else:
                 messages.add_message(
                     request, messages.ERROR,
-                    message="Access denied: wrong password", extra_tags="danger")
+                    message="Access denied: wrong password",
+                    extra_tags="danger")
         else:
-            return render(request, "users/login.html", {'form':form})
+            return render(request, "users/login.html", {'form': form})
 
     form = LoginForm()
-    return render(request, "users/login.html", {'form':form})
+    return render(request, "users/login.html", {'form': form})
 
 
 def logout_view(request):
@@ -63,16 +67,19 @@ def signin_view(request):
             user.save()
             messages.add_message(
                 request, messages.INFO,
-                message=f"Please check your email '{email}' to confirm your account and set your password",
+                message=(
+                    f"Please check your email '{email}' to "
+                    "confirm your account and set your password"
+                    ),
                 extra_tags="info"
             )
             send_password_reset_email(request, user)
             return redirect('login')
         else:
-            return render(request, "users/signin.html", {'form':form})
+            return render(request, "users/signin.html", {'form': form})
 
     form = SignInForm()
-    return render(request, "users/signin.html", {'form':form})
+    return render(request, "users/signin.html", {'form': form})
 
 
 def request_password_reset(request):
@@ -86,15 +93,22 @@ def request_password_reset(request):
 
             messages.add_message(
                 request, messages.INFO,
-                message=f"Please check your email '{email}' to reset your password",
+                message=(
+                    f"Please check your email '{email}' "
+                    "to reset your password"
+                    ),
                 extra_tags="info"
             )
         else:
-            return render(request, "users/request_password_reset.html", {'form':form})
+            return render(
+                request,
+                "users/request_password_reset.html",
+                {'form': form}
+                )
     form = RequestPasswordResetForm()
     if request.user.is_authenticated:
         form = RequestPasswordResetForm(initial={'email': request.user.email})
-    return render(request, "users/request_password_reset.html", {'form':form})
+    return render(request, "users/request_password_reset.html", {'form': form})
 
 
 def reset_password(request, token):
@@ -111,12 +125,12 @@ def reset_password(request, token):
             login(request, user)
             messages.add_message(
                 request, messages.SUCCESS,
-                message=f"Your password have been reset",
+                message="Your password have been reset",
                 extra_tags="success"
             )
             return redirect('account')
         else:
-            return render(request, "users/reset_password.html", {'form':form})
+            return render(request, "users/reset_password.html", {'form': form})
     form = ResetPasswordForm()
     context = {
         'user': user,
@@ -141,7 +155,11 @@ def change_username(request):
             )
             return redirect("account")
         else:
-            return render(request, "users/change_username.html", {'form': form})
+            return render(
+                request,
+                "users/change_username.html",
+                {'form': form},
+                )
 
     form = ChangeUsernameForm()
     return render(request, "users/change_username.html", {'form': form})
@@ -160,14 +178,17 @@ def change_email(request):
 
             messages.add_message(
                 request, messages.INFO,
-                message=f"Please check your email to confirm your address '{email}'",
+                message=(
+                    "Please check your email to"
+                    f" confirm your address '{email}'"
+                    ),
                 extra_tags="info"
             )
         else:
-            return render(request, "users/change_email.html", {'form':form})
+            return render(request, "users/change_email.html", {'form': form})
 
     form = ChangeEmailForm()
-    return render(request, "users/change_email.html", {'form':form})
+    return render(request, "users/change_email.html", {'form': form})
 
 
 def confirm_email(request, token):

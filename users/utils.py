@@ -4,7 +4,6 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 
 
-
 def send_password_reset_email(request, user):
     token = user.get_jwt_token(expires_in=600)
     domain = request.build_absolute_uri('/')[:-1]
