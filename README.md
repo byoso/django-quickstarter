@@ -2,7 +2,17 @@
 
 *Boiletplate for django applications*
 
-The goal here is to build usefull django modules inside the project. The
-project by itself is not ment to be reused, only the modules are important.
+The goal here is to provide a django starter application with a complete
+authentication system, and canvas for docker / docker-compose ready for
+deployment.
 
-So only a minimum of things must be added in the project itself.
+### Environment variables
+
+#### Production
+
+Do not forget to set this on the server :
+
+- SECRET_KEY
+- EMAIL_HOST_PASSWORD
+
+Other variable are set in docker-compose.yml

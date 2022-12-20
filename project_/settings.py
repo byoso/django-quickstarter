@@ -24,10 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ku=q1^ny6*w5gwc4!mkm^k6f7bkg2j$g@%zljztxyw-h*=#(to'
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'insecure secret key, dev only'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('DEBUG') == '1':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -61,7 +64,7 @@ ROOT_URLCONF = 'project_.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates"),],
+        'DIRS': [os.path.join(BASE_DIR, "templates"), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,13 +83,25 @@ WSGI_APPLICATION = 'project_.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if ENV == "dev":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME') or "django_pg_db",
+            'USER': os.environ.get('PG_USER') or "postgres",
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD') or "postgres",
+            'HOST': os.environ.get('PG_HOST') or "db",
+            'PORT': os.environ.get('PG_PORT') or 5432,
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -133,7 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ###############  Customizations
 
-LOGIN_URL = 'login' # redirect if login_required is denied
+LOGIN_URL = 'login'  # redirect if login_required is denied
 AUTH_USER_MODEL = 'users.User'
 
 # EMAIL
@@ -145,4 +160,4 @@ EMAIL_HOST = os.environ.get('EMAIL_HOST') or "localhost"
 EMAIL_PORT = os.environ.get('EMAIL_PORT') or 25
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or "email@email.com"
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or "testpass"
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or "testpass1"
