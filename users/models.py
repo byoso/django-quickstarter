@@ -16,7 +16,8 @@ class User(AbstractUser):
         editable=False,
     )
 
-    unconfirmed_email = models.EmailField(max_length=64, db_index=True, null=True)
+    unconfirmed_email = models.EmailField(
+        max_length=64, db_index=True, null=True)
 
     def __repr__(self):
         return f"<User: {self.username}>"
@@ -31,8 +32,8 @@ class User(AbstractUser):
     @staticmethod
     def verify_token(token):
         try:
-            pk = jwt.decode(token, settings.SECRET_KEY,
-                algorithms=['HS256'])['id']
+            pk = jwt.decode(
+                token, settings.SECRET_KEY, algorithms=['HS256'])['id']
         except Exception as e:
             print("Token error:", e)
             return None

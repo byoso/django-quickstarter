@@ -1,8 +1,10 @@
 *.pyc
 *.sqlite3
+*.db
 venv/
 env/
-.env/
 .venv/
+.env/
 __pycache__/
 .vscode/
+.coverage
