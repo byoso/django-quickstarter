@@ -27,9 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'insecure secret key, dev only'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('DEBUG') == '1':
-    DEBUG = True
-else:
+DEBUG = True
+if os.environ.get('DEBUG') == '0':
     DEBUG = False
 
 ALLOWED_HOSTS = ['*']
@@ -57,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'project_.urls'
@@ -138,7 +138,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# overrides apps 'static' folder
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# gathered static files for production
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles-cdn")
+# for whitenoise
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
