@@ -1,0 +1,11 @@
+*.pyc
+*.sqlite3
+staticfiles-cdn/
+*.db
+venv/
+env/
+.venv/
+.env/
+__pycache__/
+.vscode/
+.coverage

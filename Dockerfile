@@ -11,6 +11,9 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN ./manage.py migrate --noinput
+RUN ./manage.py collectstatic --noinput
+
 EXPOSE 8000
 
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "-w", "3", "project_.wsgi"]

@@ -1,5 +1,30 @@
 version: '3.8'
 services:
+  proxy:
+    build: docker_config/proxy
+    restart: always
+    ports:
+      - 80:80
+    networks:
+      - django_network
+
+  db:
+    build: docker_config/postgres
+    # image: postgres:15
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - PG_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PG_DB=django_db
+      - PG_HOST=db
+      - PG_PORT=5432
+    networks:
+      - django_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   web:
     build: .
     restart: always
@@ -10,8 +35,8 @@ services:
       - ENV=prod
       ## postgres config
       - PG_USER=postgres
-      - POSTGRES_PASSWORD=admin
-      - PG_DB=djangoapp
+      - POSTGRES_PASSWORD=postgres
+      - PG_DB=django_db
       - PG_HOST=db
       - PG_PORT=5432
       ## Sending email config
@@ -23,29 +48,6 @@ services:
     networks:
       - django_network
 
-  proxy:
-    build: proxy
-    restart: always
-    ports:
-      - 80:80
-    networks:
-      - django_network
-
-  db:
-    image: postgres:15
-    restart: always
-    ports:
-      - 5432:5432
-    networks:
-      - django_network
-    environment:
-      - PG_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - PG_DB=django_db
-      - PG_HOST=db
-      - PG_PORT=5432
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
 networks:
   django_network:
