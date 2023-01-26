@@ -11,9 +11,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-# RUN ./manage.py migrate --noinput
-# RUN ./manage.py collectstatic --noinput
-
 EXPOSE 8000
 
 RUN chmod +x prod_config/entrypoint.sh

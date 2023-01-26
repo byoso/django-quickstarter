@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'insecure secret key, dev only'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == '1'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['0.0.0.0']
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
     'https://localhost:8080',
@@ -62,7 +62,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'project_.urls'
@@ -96,7 +95,6 @@ if not DB_IS_POSTGRESQL:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 else:
     DATABASES = {
         'default': {
@@ -149,12 +147,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # gathered static files for production
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# for whitenoise
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Media files
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

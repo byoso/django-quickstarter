@@ -42,3 +42,10 @@ The other settings are quite self-explainatory.
 `coverage run ./manage.py test -v 2` # [-v 2 ] is for verbose
 
 `coverage report` to see the report
+
+## Reminders
+
+Delete all 'none' tagged docker images:
+```sh
+docker rmi $(docker images -f "dangling=true" -q)
+```
