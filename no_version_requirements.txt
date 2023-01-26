@@ -1,5 +1,0 @@
-django
-pyjwt
-psycopg2-binary
-gunicorn
-whitenoise

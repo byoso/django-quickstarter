@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  proxy:
-    build: docker_config/proxy
+  nginx:
+    build: prod_config/nginx
     restart: always
     ports:
       - 80:80
@@ -9,19 +9,17 @@ services:
       - django_network
 
   db:
-    build: docker_config/postgres
-    # image: postgres:15
+    # build: prod_config/postgres
+    image: postgres:14.1-alpine
     restart: always
     ports:
-      - 5432:5432
-    environment:
-      - PG_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - PG_DB=django_db
-      - PG_HOST=db
-      - PG_PORT=5432
+      - ${PG_PORT}:${PG_PORT}
+    env_file:
+      - .env
     networks:
       - django_network
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -29,28 +27,21 @@ services:
     build: .
     restart: always
     ports:
-      - 8000:8000
-    environment:
-      - DEBUG=0
-      - ENV=prod
-      ## postgres config
-      - PG_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - PG_DB=django_db
-      - PG_HOST=db
-      - PG_PORT=5432
-      ## Sending email config
-      - EMAIL_HOST=smtp.googlemail.com
-      - EMAIL_PORT=25
-      - EMAIL_USE_TLS=1
-      #  set a real email
-      - EMAIL_HOST_USER=fake@mail.com
+      - ${PROD_PORT}:${PROD_PORT}
+    env_file:
+      - .env
     networks:
       - django_network
-
+    volumes:
+      - static_files:/web/staticfiles
+      - media_files:/web/media
+    depends_on:
+      - db
 
 networks:
   django_network:
 
 volumes:
+  static_files:
+  media_files:
   postgres_data:

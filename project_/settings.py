@@ -14,7 +14,9 @@ import os
 from pathlib import Path
 
 
-ENV = os.environ.get('ENV') or "dev"  # dev or prod
+DB_IS_POSTGRESQL = str(os.environ.get('DB_IS_POSTGRESQL')) == '1'
+EMAIL_IS_CONFIGURED = str(os.environ.get('EMAIL_IS_CONFIGURED')) == '1'
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,11 +29,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'insecure secret key, dev only'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-if os.environ.get('DEBUG') == '0':
-    DEBUG = False
+DEBUG = os.environ.get('DEBUG') == '1'
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8080',
+    'https://localhost:8080',
+    "http://0.0.0.0:8080",
+    "https://*.ondigitalocean.app",
+    ]
 
 
 # Application definition
@@ -83,7 +89,7 @@ WSGI_APPLICATION = 'project_.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if ENV == "dev":
+if not DB_IS_POSTGRESQL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -142,10 +148,14 @@ STATIC_URL = 'static/'
 # overrides apps 'static' folder
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # gathered static files for production
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles-cdn")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # for whitenoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
+# Media files
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -158,7 +168,7 @@ LOGIN_URL = 'login'  # redirect if login_required is denied
 AUTH_USER_MODEL = 'users.User'
 
 # EMAIL
-if ENV == "prod":
+if EMAIL_IS_CONFIGURED:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
