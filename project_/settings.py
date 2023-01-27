@@ -109,7 +109,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -128,7 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -141,9 +139,11 @@ USE_I18N = True
 USE_TZ = True
 
 
+LOGIN_URL = 'login'  # redirect if login_required is denied
+AUTH_USER_MODEL = 'users.User'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_URL = 'static/'
 # overrides apps 'static' folder
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
@@ -159,12 +159,6 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-###############  Customizations
-
-LOGIN_URL = 'login'  # redirect if login_required is denied
-AUTH_USER_MODEL = 'users.User'
-
 # EMAIL
 if EMAIL_IS_CONFIGURED:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -176,23 +170,3 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == '1'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or "email@email.com"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or "testpass1"
-
-# basic logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'configs/debug.log'),
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
