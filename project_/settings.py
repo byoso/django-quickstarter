@@ -33,7 +33,7 @@ DEBUG = os.environ.get('DEBUG') == '1'
 SITE_IP = os.environ.get('SITE_IP') or '0.0.0.0'
 NGINX_PORT = os.environ.get('NGINX_PORT') or 80
 
-ALLOWED_HOSTS = [SITE_IP, ]
+ALLOWED_HOSTS = [SITE_IP, '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = [
     f'http://{SITE_IP}:8000',
     f'http://{SITE_IP}:{NGINX_PORT}',
@@ -172,8 +172,9 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST') or "localhost"
 EMAIL_PORT = os.environ.get('EMAIL_PORT') or 25
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == '1'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or "email@email.com"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or "testpass1"
 
 # basic logging

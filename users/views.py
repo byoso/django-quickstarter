@@ -65,14 +65,6 @@ def signin_view(request):
             email = form.cleaned_data['email']
             user = User(username=username, email=email, is_active=False)
             user.save()
-            messages.add_message(
-                request, messages.INFO,
-                message=(
-                    f"Please check your email '{email}' to "
-                    "confirm your account and set your password"
-                    ),
-                extra_tags="info"
-            )
             send_password_reset_email(request, user)
             return redirect('login')
         else:

@@ -11,13 +11,8 @@ sleep 5s
 ./manage.py migrate --noinput
 ./manage.py collectstatic --noinput
 
-# Superuser: create him here or within the populate.py script
-# django automatically checks the environment variables
-# DJANGO_SUPERUSER_USERNAME and DJANGO_SUPERUSER_PASSWORD
-# to create the superuser with all the parameters
-./manage.py createsuperuser --email $SUPERUSER_EMAIL --noinput || true
-
 # populate the database with some data
+# the superuser can be created here
 ./manage.py shell < populate.py
 
 echo "MIGRATE.SH EXECUTED"
