@@ -1,7 +1,7 @@
 #! /bin/bash
 
 
-cd /web/prod_config
+cd /web/configs
 chmod +x migrate.sh
 ./migrate.sh
 cd /web

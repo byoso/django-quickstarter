@@ -7,7 +7,7 @@ volumes:
 
 services:
   nginx:
-    build: prod_config/nginx
+    build: configs/docker/nginx
     restart: always
     ports:
       - ${PROD_PORT}:80
@@ -16,7 +16,7 @@ services:
     volumes:
       - static_files:/staticfiles
   db:
-    # build: prod_config/postgres
+    # build: configs/docker/postgres
     image: postgres:14.1-alpine
     restart: always
     ports:

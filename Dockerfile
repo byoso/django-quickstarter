@@ -13,5 +13,5 @@ COPY . .
 
 EXPOSE 8000
 
-RUN chmod +x prod_config/entrypoint.sh
-CMD ["bash","prod_config/entrypoint.sh"]
+RUN chmod +x configs/entrypoint.sh
+CMD ["bash","configs/entrypoint.sh"]
