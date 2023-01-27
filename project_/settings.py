@@ -30,12 +30,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'insecure secret key, dev only'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == '1'
+SITE_IP = os.environ.get('SITE_IP') or '0.0.0.0'
+NGINX_PORT = os.environ.get('NGINX_PORT') or 80
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = [SITE_IP, ]
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8080',
-    'https://localhost:8080',
-    "http://0.0.0.0:8080",
+    f'http://{SITE_IP}:8000',
+    f'http://{SITE_IP}:{NGINX_PORT}',
+    f'https://{SITE_IP}',
     "https://*.ondigitalocean.app",
     ]
 

@@ -49,3 +49,46 @@ Delete all 'none' tagged docker images:
 ```sh
 docker rmi $(docker images -f "dangling=true" -q)
 ```
+
+## Deployment on DigitalOcean
+
+Be sure you have registered an ssh public key in your account
+
+### Droplet
+- choose a docker image instead of an OS
+- choose whatever plan is needed
+- create the droplet
+
+### Create a non-root user
+
+- connect with SSH:
+`ssh root@IP_OF_THE_DROPLET`
+- then:
+```
+adduser <username>
+# then fill the answered field
+usermod -aG docker <username>
+usermod -aG sudo <username>
+cp -r /root/.ssh /home/<username>/.ssh
+cd /home/<username>
+chown -R <username>:<username> .
+
+```
+Now you should be able to connect with: `ssh <username>@IP_OF_THE_DROPLET`,
+do it.
+
+Then you will need new ssh keys to connect to github from this server
+```
+cd /home/<username>
+ssh-keygen -t ed25519 -C <email_used_for_your_github_account@example.com>
+cat id_ed25519.pub
+
+# some output...
+```
+Copy this output and add it in your github account as a new ssh key.
+ Now the server is allowed to access github to clone (SSH) your repos.
+
+```
+cd /home/username
+git clone git@github.com:<your/repo>.git
+```

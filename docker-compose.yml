@@ -10,7 +10,7 @@ services:
     build: configs/docker/nginx
     restart: always
     ports:
-      - ${PROD_PORT}:80
+      - ${NGINX_PORT}:80
     networks:
       - django_network
     volumes:
