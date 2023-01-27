@@ -55,7 +55,7 @@ docker rmi $(docker images -f "dangling=true" -q)
 Be sure you have registered an ssh public key in your account
 
 ### Droplet
-- choose a docker image instead of an OS
+- choose docker instead of an OS
 - choose whatever plan is needed
 - create the droplet
 
