@@ -50,7 +50,7 @@ Delete all 'none' tagged docker images:
 docker rmi $(docker images -f "dangling=true" -q)
 ```
 
-## Deployment on DigitalOcean
+# Deployment on DigitalOcean droplet
 
 Be sure you have registered an ssh public key in your account
 
@@ -66,13 +66,13 @@ Be sure you have registered an ssh public key in your account
 - then:
 ```
 adduser <username>
-# then fill the answered field
+# then fill the answered fields
 usermod -aG docker <username>
 usermod -aG sudo <username>
 cp -r /root/.ssh /home/<username>/.ssh
 cd /home/<username>
 chown -R <username>:<username> .
-
+exit
 ```
 Now you should be able to connect with: `ssh <username>@IP_OF_THE_DROPLET`,
 do it.
@@ -89,6 +89,19 @@ Copy this output and add it in your github account as a new ssh key.
  Now the server is allowed to access github to clone (SSH) your repos.
 
 ```
-cd /home/username
-git clone git@github.com:<your/repo>.git
+cd /home/<username>
+git clone git@github.com:<your/project>.git
+cd <project>
+nano .env
+# modify the settings, change the passwords, etc... Save and exit nano
+sudo apt install docker-compose   # if not already installed
+docker-compose up --build
+
+# once it is up, you can check in your browser at the
+# site's IP, it works !
+# then stop that with ctrl+c, wait until it is all stoped
+
+docker-compose up -d
 ```
+
+Done ! Your site is online ! Congratz !
