@@ -6,7 +6,7 @@ import jwt
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.shortcuts import get_object_or_404, HttpResponse
+from django.shortcuts import get_object_or_404
 
 
 class User(AbstractUser):

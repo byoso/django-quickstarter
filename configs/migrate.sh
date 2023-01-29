@@ -10,5 +10,7 @@ sleep 5s
 ./manage.py migrate --noinput
 ./manage.py collectstatic --noinput
 
+./manage.py shell < configs/populate/createsuperuser.py
+./manage.py shell < configs/populate/populate.py
 
 echo "MIGRATE.SH EXECUTED"

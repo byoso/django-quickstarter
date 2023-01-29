@@ -35,6 +35,12 @@ DB_IS_POSTGRESQL=0
 # set 0: the emails sent will be emulated in console
 EMAIL_IS_CONFIGURED=0
 ```
+**About DEBUG**: when ON, the statics are served by django itself, not suitable
+for production. when OFF, the statics are served by Nginx, then, on the port
+used by nginx (here by default 80). So, when testing your app with DEBUG=0,
+no static will appear on port 8000, just change the port in the browser to 80.
+
+
 The other settings are quite self-explainatory.
 
 ## Tests

@@ -17,6 +17,7 @@ POP_DIR_SH = os.path.abspath(POP_DIR.replace(" ", "\ "))
 IMG_DIR = os.path.join(settings.BASE_DIR, "media/images")
 IMG_DIR_SH = os.path.abspath(IMG_DIR.replace(" ", "\ "))
 
+
 # may be used in some project, otherwise just delete it
 def set_images(project, icon_name=None, shot_name=None):
     if icon_name is not None:
@@ -35,6 +36,17 @@ def populate():
     """Populate the database with some data."""
     print("Populating...")
 
+    from users.models import User
+    user = User.objects.create(
+        username='test',
+        email='test@test.test',
+    )
+    user.set_password('test')
+    user.save()
     # add some data here
 
     print("Populating done!")
+
+
+if os.environ.get('POPULATE') == '1':
+    populate()
