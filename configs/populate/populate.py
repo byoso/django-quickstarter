@@ -36,13 +36,6 @@ def populate():
     """Populate the database with some data."""
     print("Populating...")
 
-    from users.models import User
-    user = User.objects.create(
-        username='test',
-        email='test@test.test',
-    )
-    user.set_password('test')
-    user.save()
     # add some data here
 
     print("Populating done!")
