@@ -33,10 +33,13 @@ DEBUG = os.environ.get('DEBUG') == '1'
 SITE_IP = os.environ.get('SITE_IP') or '0.0.0.0'
 NGINX_PORT = os.environ.get('NGINX_PORT') or 80
 
-ALLOWED_HOSTS = [SITE_IP, '127.0.0.1']
+ALLOWED_HOSTS = [SITE_IP]
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+
 CSRF_TRUSTED_ORIGINS = [
-    f'http://{SITE_IP}:8000',
-    f'http://{SITE_IP}:{NGINX_PORT}',
+    f'http://{SITE_IP}',
     f'https://{SITE_IP}',
     "https://*.ondigitalocean.app",
     ]
