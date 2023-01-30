@@ -26,24 +26,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'insecure secret key, dev only'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure secret key, dev only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == '1'
-SITE_IP = os.environ.get('SITE_IP') or '0.0.0.0'
-NGINX_PORT = os.environ.get('NGINX_PORT') or 80
+SITE_IP = os.environ.get('SITE_IP', '0.0.0.0')
+DOMAIN = os.environ.get('DOMAIN', 'localhost')
+NGINX_PORT = os.environ.get('NGINX_PORT', '80')
 
 ALLOWED_HOSTS = [SITE_IP]
-ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
-if ALLOWED_HOSTS_ENV:
-    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', None)
 
 CSRF_TRUSTED_ORIGINS = [
     f'http://{SITE_IP}',
     f'https://{SITE_IP}',
+    f'http://{DOMAIN}',
+    f'https://{DOMAIN}',
+    f'http://www.{DOMAIN}',
+    f'https://www.{DOMAIN}',
     "https://*.ondigitalocean.app",
     ]
 
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 # Application definition
 
@@ -104,11 +109,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('PG_DB') or "django_pg_db",
-            'USER': os.environ.get('PG_USER') or "postgres",
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD') or "postgres",
-            'HOST': os.environ.get('PG_HOST') or "db",
-            'PORT': os.environ.get('PG_PORT') or 5432,
+            'NAME': os.environ.get('PG_DB', "django_pg_db"),
+            'USER': os.environ.get('PG_USER', "postgres"),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', "postgres"),
+            'HOST': os.environ.get('PG_HOST', "db"),
+            'PORT': os.environ.get('PG_PORT', "5432"),
         }
     }
 
@@ -167,9 +172,9 @@ if EMAIL_IS_CONFIGURED:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST') or "localhost"
-EMAIL_PORT = os.environ.get('EMAIL_PORT') or 25
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == '1'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') or "email@email.com"
+EMAIL_HOST = os.environ.get('EMAIL_HOST', "localhost")
+EMAIL_PORT = os.environ.get('EMAIL_PORT', "25")
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', '0') == '1'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', "email@email.com")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') or "testpass1"
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', "testpass1")

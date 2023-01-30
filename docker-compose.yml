@@ -1,9 +1,10 @@
-version: '3.8'
+version: '3.9'
 
 volumes:
   static_files:
   media_files:
   postgres_data:
+  ssl_certs:
 
 services:
   nginx:
@@ -16,6 +17,7 @@ services:
     volumes:
       - static_files:/staticfiles
       - media_files:/mediafiles
+      - ssl_certs:/etc/letsencrypt
     depends_on:
       - web
   db:
@@ -46,9 +48,21 @@ services:
       - django_network
     volumes:
       - static_files:/web/staticfiles
-      - media_files:/web/media
+      - media_files:/web/mediafiles
     depends_on:
       - db
+
+  certbot:
+    build:
+      context: .
+      dockerfile: configs/docker/certbot/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ssl_certs:/etc/letsencrypt
+    depends_on:
+      - web
 
 networks:
   django_network:

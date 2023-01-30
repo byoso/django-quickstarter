@@ -1,4 +1,5 @@
 FROM python:3.11-slim-buster
+# FROM python:alpine3.17
 
 ENV PYTHONUNBUFFERED 1
 
@@ -12,6 +13,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 EXPOSE 8000
+
 
 RUN chmod +x configs/entrypoint.sh
 CMD ["bash","configs/entrypoint.sh"]
