@@ -52,17 +52,16 @@ services:
     depends_on:
       - db
 
-  certbot:
-    build:
-      context: .
-      dockerfile: configs/docker/certbot/Dockerfile
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - ssl_certs:/etc/letsencrypt
-    depends_on:
-      - web
+  # certbot:
+  #   build:
+  #     context: .
+  #     dockerfile: configs/docker/certbot/Dockerfile
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ssl_certs:/etc/letsencrypt
+  #   depends_on:
+  #     - web
 
 networks:
   django_network:
