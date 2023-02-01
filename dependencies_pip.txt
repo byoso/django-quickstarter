@@ -1,6 +1,6 @@
-django
+django>=4,<4.3
+uWSGI>=2.0.18,<2.1
 pyjwt
 psycopg2-binary
-gunicorn
 django-dotenv
 coverage

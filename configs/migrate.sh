@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 
 cd /web
@@ -7,10 +7,10 @@ cd /web
 # if in another container (temporary, should do that another way):
 sleep 5s
 
-./manage.py migrate --noinput
-./manage.py collectstatic --noinput
+python manage.py migrate --noinput
+python manage.py collectstatic --noinput
 
-./manage.py shell < configs/populate/createsuperuser.py
-./manage.py shell < configs/populate/populate.py
+python manage.py shell < configs/populate/createsuperuser.py
+python manage.py shell < configs/populate/populate.py
 
 echo "MIGRATE.SH EXECUTED"

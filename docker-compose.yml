@@ -4,12 +4,16 @@ volumes:
   static_files:
   media_files:
   postgres_data:
-  ssl_certs:
+  # ssl_certs:
 
 services:
   nginx:
-    build: configs/docker/nginx
+    build:
+      context: .
+      dockerfile: configs/docker/nginx/Dockerfile
     restart: always
+    env_file:
+      - .env
     ports:
       - ${NGINX_PORT}:80
     networks:
@@ -17,7 +21,7 @@ services:
     volumes:
       - static_files:/staticfiles
       - media_files:/mediafiles
-      - ssl_certs:/etc/letsencrypt
+      # - ssl_certs:/etc/letsencrypt
     depends_on:
       - web
   db:

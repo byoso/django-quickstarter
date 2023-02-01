@@ -1,19 +1,24 @@
-FROM python:3.11-slim-buster
+# FROM python:3.11-slim-buster
+FROM python:3.11-alpine
 # FROM python:alpine3.17
+
 
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /web
+
+# Dependencies for uWSGI
+RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
 
 COPY requirements.txt requirements.txt
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY . .
+RUN apk del .tmp
 
-EXPOSE 8000
+COPY . .
 
 
 RUN chmod +x configs/entrypoint.sh
-CMD ["bash","configs/entrypoint.sh"]
+CMD ["sh","configs/entrypoint.sh"]

@@ -1,12 +1,14 @@
-#! /bin/bash
+#! /bin/sh
 
+set -e
 
 cd /web/configs
 chmod +x migrate.sh
 ./migrate.sh
 cd /web
-# gunicorn --bind 0.0.0.0:8000 -w ${GUNICORN_WORKERS} project_.wsgi:application
-gunicorn -c python:configs.docker.nginx.gunicorn_config project_.wsgi:application
+
+
+uwsgi --socket :8000 --master --enable-threads --module project_.wsgi
 
 
 echo "ENTRYPOINT.SH EXECUTED"
