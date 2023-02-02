@@ -3,7 +3,7 @@
 set -e
 
 echo "checking for dhparams.pem"
-if [! -f "/vol/nginx/ssl-dhparams.pem"]; then
+if [ ! -f "/vol/nginx/ssl-dhparams.pem"]; then
     echo "dhparams.pem does not exist, creating it"
     openssl dhparam -out /vol/nginx/ssl-dhparams.pem 2048
 fi
@@ -13,7 +13,7 @@ export host=\$host
 export request_uri=\$request_uri
 
 echo "Checking for fullchain.pem"
-if [! -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem"]; then
+if [ ! -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem"]; then
     echo "No SSL certificate found, enabling HTTP only"
     envsubst < /etc/nginx/default.conf.tpl > /etc/nginx/conf.d/default.conf
 else
