@@ -17,7 +17,7 @@ class User(AbstractUser):
     )
 
     unconfirmed_email = models.EmailField(
-        max_length=64, db_index=True, null=True)
+        max_length=64, db_index=True, null=True, blank=True)
 
     def __repr__(self):
         return f"<User: {self.username}>"
