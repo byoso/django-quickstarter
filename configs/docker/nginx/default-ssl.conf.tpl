@@ -28,7 +28,7 @@ server {
         alias /vol/staticfiles;
     }
 
-    location / media {
+    location /media {
         alias /vol/mediafiles;
     }
 
