@@ -4,7 +4,9 @@ volumes:
   static_files:
   media_files:
   postgres_data:
-  # ssl_certs:
+  cerbot-certs:
+  certbot-web:
+  proxy-dhparams:
 
 services:
   nginx:
@@ -16,12 +18,15 @@ services:
       - .env
     ports:
       - ${NGINX_PORT}:80
+      - 443:443
     networks:
       - django_network
     volumes:
-      - static_files:/staticfiles
-      - media_files:/mediafiles
-      # - ssl_certs:/etc/letsencrypt
+      - static_files:/vol/staticfiles
+      - media_files:/vol/mediafiles
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt
+      - proxy-dhparams:/vol/proxy
     depends_on:
       - web
   db:
@@ -56,16 +61,17 @@ services:
     depends_on:
       - db
 
-  # certbot:
-  #   build:
-  #     context: .
-  #     dockerfile: configs/docker/certbot/Dockerfile
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - ssl_certs:/etc/letsencrypt
-  #   depends_on:
-  #     - web
+  certbot:
+    build:
+      context: .
+      dockerfile: configs/docker/certbot/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - certbot-certs:/etc/letsencrypt
+      - certbot-web:/vol/www
+    depends_on:
+      - nginx
 
 networks:
   django_network:
