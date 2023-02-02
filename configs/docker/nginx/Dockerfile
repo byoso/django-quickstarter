@@ -24,6 +24,6 @@ VOLUME /vol/www
 # RUN chmod 755 /vol/staticfiles
 # RUN chmod 755 /vol/mediafiles
 
-USER nginx
+# USER nginx
 
 CMD ["sh","/run.sh"]
