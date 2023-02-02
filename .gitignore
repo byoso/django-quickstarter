@@ -1,6 +1,6 @@
 *.pyc
 *.sqlite3
-staticfiles-cdn/
+staticfiles/admin/
 *.db
 venv/
 env/
