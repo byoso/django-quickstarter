@@ -15,10 +15,10 @@ export request_uri=\$request_uri
 echo "Checking for fullchain.pem"
 if [! -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem"]; then
     echo "No SSL certificate found, enabling HTTP only"
-    envsubst < /etc/nginx/conf.d/default.conf.tpl > /etc/nginx/conf.d/default.conf
+    envsubst < /etc/nginx/default.conf.tpl > /etc/nginx/conf.d/default.conf
 else
     echo "SSL certificate found, enabling HTTPS"
-    envsubst < /etc/nginx/conf.d/default-ssl.conf.tpl > /etc/nginx/conf.d/default.conf
+    envsubst < /etc/nginx/default-ssl.conf.tpl > /etc/nginx/conf.d/default.conf
 fi
 
 nginx -g 'daemon off;'
