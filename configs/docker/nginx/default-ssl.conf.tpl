@@ -22,7 +22,7 @@ server {
 
     ssl_dhparam /vol/proxy/ssl-dhparams.pem;
 
-    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     location /static {
         alias /vol/staticfiles;
