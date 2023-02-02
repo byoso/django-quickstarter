@@ -4,7 +4,7 @@ volumes:
   static_files:
   media_files:
   postgres_data:
-  cerbot-certs:
+  certbot-certs:
   certbot-web:
   proxy-dhparams:
 
