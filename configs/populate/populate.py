@@ -41,5 +41,4 @@ def populate():
     print("Populating done!")
 
 
-if os.environ.get('POPULATE') == '1':
-    populate()
+populate()

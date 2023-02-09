@@ -23,5 +23,4 @@ def create_superuser():
         print("Superuser already exists!")
 
 
-if os.environ.get('CREATE_SUPERUSER') == '1':
-    create_superuser()
+create_superuser()
