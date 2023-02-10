@@ -18,4 +18,5 @@ certbot certonly \
     --non-interactive \
     --agree-tos \
     --email "$ACME_DEFAULT_EMAIL" \
-    -d "$DOMAIN"
+    -d "$DOMAIN" \
+    -d www."$DOMAIN"
